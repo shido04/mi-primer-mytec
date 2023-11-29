@@ -10,7 +10,6 @@ class User (AbstractUser):
 
 class UserLibrary (models.Model):
     user = models.OneToOneField (User, on_delete=models. CASCADE, related_name="library") 
-    
     products = models.ManyToManyField (Product, blank=True)
     
     def str(self):
