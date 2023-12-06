@@ -46,12 +46,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'allauth.socialaccount.providers.google',
+    
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
-    'carrito',
+    
+
+    'crispy_forms',
+    'crispy_bootstrap4',
+    
+
+    
 
 
     'core',
@@ -89,6 +97,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 AUTH_USER_MODEL="accounts.User"
 
 SITE_ID = 1
+
 
 
 
@@ -159,9 +168,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'es-MX'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
@@ -188,3 +196,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET=os.environ.get('STRIPE_WEBHOOK_SECRET')
+
+CRISPY_TEMPLATE_PACK = 'Bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

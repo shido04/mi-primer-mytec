@@ -11,9 +11,8 @@ from django.urls import reverse
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.decorators import login_required
-from carrito.models import Product, Cart, CartItem
-from django.contrib.auth.models import User
 
+from django.contrib.auth.models import User
 
 from accounts.models import UserLibrary
 
@@ -29,6 +28,7 @@ class HomeView(View):
   def get(self, request, *args, **kwargs):
       products = Product.objects.filter(active=True).order_by('id')
       form = ProductModelForm()
+      
 
       digital_products_data = None
 
@@ -39,7 +39,8 @@ class HomeView(View):
       
       context={
           'products':digital_products_data,
-          'form':form
+          'form':form,
+         
       }
       return render(request, 'pages/index.html', context)
 
@@ -75,6 +76,8 @@ class HomeView(View):
       }
       return render(request, 'pages/index.html', context)
 
+
+
   
 class SearchView(View):
    def get(self, request, *args, **kwargs):
@@ -94,21 +97,6 @@ class UserProductListView(View):
         return render(request, 'pages/products/user_productlist.html', context)
 
 
-
-
-   # other fields
-
-@login_required(login_url='login')
-def cart(request, product_id):
-  product = Product.objects.get(pk=product_id)
-  cart, created = Cart.objects.get_or_create(user=request.user)
-  cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
-  
-  if not item_created:
-      cart_item.quantity += 1
-      cart_item.save()
-  
-  return render(request, 'pages/products/widget.html', {'product': product})
 
 
 class UserLibraryView(LoginRequiredMixin, View):
@@ -158,7 +146,8 @@ class ProductDetailView(View):
 class CreateCheckoutSessionView(View):
     def post(self, request,*args, **kwargs):
         product_id = request.POST.get('pk')
-        product = get_object_or_404(Product)
+        product = get_object_or_404(Product, pk=1)
+        
         
         if settings.DEBUG:
             domain="http://127.0.0.1:8000"
@@ -173,8 +162,8 @@ class CreateCheckoutSessionView(View):
                 customer_email=request.user.email
 
         session = stripe.checkout.Session.create(
-            customer=customer,
-            customer_email=customer_email,
+            customer=None,
+            customer_email=None,
             payment_method_types=['card'],
             line_items=[{
                 'price_data': {
@@ -227,6 +216,7 @@ def stripe_webhook(request, *args, **kwargs):
         product=Product.objects.get(id=product_id)
 
         stripe_customer_id=event["data"]["object"]["customer"]
+        
 
 
         try:
@@ -256,11 +246,10 @@ def stripe_webhook(request, *args, **kwargs):
                     subject="Create an account to access your content",
                     message="Please signup to access your products",
                     recipient_list=[stripe_customer_email],
-                    from_email="mytec <isai.cruz@uabc.edu.mx>"
+                    from_email="mytec <@uabc.edu.mx>"
                 )
 
                 pass
-
 
 
     # escuchar por pago exitoso
@@ -270,3 +259,6 @@ def stripe_webhook(request, *args, **kwargs):
     # dar acceso al producto
 
     return HttpResponse()
+
+
+

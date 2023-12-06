@@ -7,6 +7,7 @@ from django.urls.conf import include
 from . import views
 
 
+
 from .views import (
 HomeView, 
 UserProductListView, 
@@ -16,7 +17,8 @@ CreateCheckoutSessionView,
 SuccessView,
 stripe_webhook,
 UserLibraryView,
-SearchView
+SearchView,
+
 
 
 
@@ -26,7 +28,9 @@ SearchView
 urlpatterns = [
     
      path('search/', SearchView.as_view(), name='search'),
-     path("add/<int:product_id>/", views.cart, name="cart"),
+     
+     
+
      path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
      path('products/<int:pk>/', ProductDetailView.as_view(), name="product-detail"),
      path('admin/', admin.site.urls),
